@@ -272,7 +272,7 @@ export default function WebChatPage() {
                   : "bg-white text-[#111b21] rounded-tl-none border border-slate-200"
               }`}
             >
-              <div>{msg.text}</div>
+              <div>{msg.text.split(/(https?:\/\/[^\s)]+)/g).map((part, linkIndex) => /^https?:\/\//.test(part) ? <a key={linkIndex} href={part.replace(/[.,;]+$/, "")} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2 break-all">{part.replace(/[.,;]+$/, "")}</a> : <React.Fragment key={linkIndex}>{part}</React.Fragment>)}</div>
               <div className="flex justify-end items-center gap-1 mt-1 text-[10px] text-slate-500">
                 <span>{msg.time}</span>
                 {msg.sender === "user" && <CheckCheck className="w-3.5 h-3.5 text-blue-500" />}
