@@ -380,9 +380,15 @@ export async function handleMessage(
   }
 
   if (triggerId === "menu_safety") {
-    return [createReply(currentLang === "hi"
-      ? "🛡️ सुरक्षा: हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर/लाइट जाँचें और थकान या खराब दृश्यता में सुरक्षित जगह रुकें। तत्काल आपातकाल में भारत में 112 पर कॉल करें।"
-      : "🛡️ Safety: wear a fastened helmet, never use your phone while driving, check brakes/tyres/lights, and stop safely if tired or visibility is poor. For an immediate emergency in India, call 112.")];
+    state.flowState = "menu";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
+    return [
+      createReply(currentLang === "hi"
+        ? "🛡️ सुरक्षा: हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर/लाइट जाँचें और थकान या खराब दृश्यता में सुरक्षित जगह रुकें। तत्काल आपातकाल में भारत में 112 पर कॉल करें।"
+        : "🛡️ Safety: wear a fastened helmet, never use your phone while driving, check brakes/tyres/lights, and stop safely if tired or visibility is poor. For an immediate emergency in India, call 112."),
+      getMainMenu(currentLang),
+    ];
   }
 
   if (triggerId === "menu_docs") {
@@ -399,6 +405,13 @@ export async function handleMessage(
     return [createReply(currentLang === "hi"
       ? "कंपनी/ऐप, समस्या, तारीख और राशि लिखें। संवेदनशील जानकारी न भेजें। मैं समीक्षा के लिए शिकायत ड्राफ्ट बनाऊँगा; यह अपने-आप नहीं भेजा जाएगा।"
       : "Send the company/app, issue, date and amount. Do not include sensitive IDs. I'll draft a complaint for your review; it won't be sent automatically.")];
+  }
+
+  // Let clear topic changes escape an unfinished earnings flow.
+  if (state.flowState === "earnings" && /e[ -]?shram|ई-श्रम|esharm|pmjjby|jeevan jyoti|जीवन ज्योति/i.test(rawText)) {
+    state.flowState = "rights_qa";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
   }
 
   // Handle feature-specific free text before the government-scheme RAG path.
@@ -504,7 +517,13 @@ export async function handleMessage(
       const text = currentLang === "hi"
         ? "📜 ई-श्रम कार्ड असंगठित कामगारों के पंजीकरण के लिए है। मौजूदा पात्रता और आवेदन नियम आधिकारिक पोर्टल पर जाँचें। ऑनलाइन आवेदन करें या नज़दीकी CSC से सहायता लें.\n\nआधिकारिक स्रोत: https://eshram.gov.in"
         : "📜 The e-Shram card registers unorganised workers. Check current eligibility and application rules on the official portal. Register online or seek help at a nearby Common Service Centre (CSC).\n\nOfficial source: https://eshram.gov.in";
-      return [createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      state.flowState = "menu";
+      state.lastActive = Date.now();
+      await setUserState(hashedUserId, state);
+      return [
+        createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }]),
+        getMainMenu(currentLang),
+      ];
     }
     if (/pmjjby|jeevan jyoti|जीवन ज्योति/.test(schemeQuestion)) {
       const text = currentLang === "hi"
