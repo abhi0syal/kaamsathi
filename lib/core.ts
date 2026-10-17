@@ -438,56 +438,24 @@ export async function handleMessage(
       const intent = await classifyIntent(rawText);
 
       if (intent.category === "earnings") {
-        return [
-          createReply(
-            currentLang === "hi"
-              ? "💰 कमाई ट्रैकिंग मॉड्यूल अगले चरण में आ रहा है!"
-              : "💰 Earnings tracking module is coming in the next step!",
-            [
-              { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Schemes & Rights" },
-              { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-            ]
-          ),
-        ];
+        state.flowState = "earnings";
+        await setUserState(hashedUserId, state);
+        return [createReply(currentLang === "hi" ? "कमाई और खर्च लिखें। उदाहरण: कमाई 1200, पेट्रोल 200।" : "Enter earnings and expenses. Example: earnings 1200, fuel 200.")];
       }
       if (intent.category === "safety") {
-        return [
-          createReply(
-            currentLang === "hi"
-              ? "🛡️ सुरक्षा मॉड्यूल अगले चरण में आ रहा है!"
-              : "🛡️ Safety module is coming in the next step!",
-            [
-              { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Schemes & Rights" },
-              { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-            ]
-          ),
-        ];
+        return [createReply(currentLang === "hi"
+          ? "🛡️ हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर जाँचें और थकान में सुरक्षित जगह रुकें। तत्काल आपातकाल में 112 पर कॉल करें।"
+          : "🛡️ Wear a fastened helmet, don't use your phone while driving, check brakes/tyres, and stop safely if tired. Call 112 for an immediate emergency in India.")];
       }
       if (intent.category === "document_help") {
-        return [
-          createReply(
-            currentLang === "hi"
-              ? "📄 दस्तावेज़ सहायता मॉड्यूल अगले चरण में आ रहा है!"
-              : "📄 Document help module is coming in the next step!",
-            [
-              { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Schemes & Rights" },
-              { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-            ]
-          ),
-        ];
+        state.flowState = "document_help";
+        await setUserState(hashedUserId, state);
+        return [createReply(currentLang === "hi" ? "दस्तावेज़/नोटिस का टेक्स्ट लिखें; संवेदनशील नंबर और OTP साझा न करें।" : "Paste the document/notice text; don't share sensitive numbers or OTPs.")];
       }
       if (intent.category === "complaint") {
-        return [
-          createReply(
-            currentLang === "hi"
-              ? "✍️ शिकायत लेखन मॉड्यूल अगले चरण में आ रहा है!"
-              : "✍️ Write a Complaint module is coming in the next step!",
-            [
-              { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Schemes & Rights" },
-              { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-            ]
-          ),
-        ];
+        state.flowState = "grievance";
+        await setUserState(hashedUserId, state);
+        return [createReply(currentLang === "hi" ? "कंपनी, समस्या, तारीख और राशि लिखें। मैं समीक्षा के लिए शिकायत ड्राफ्ट बनाऊँगा।" : "Send the company, issue, date and amount. I'll draft a complaint for your review.")];
       }
     }
 
