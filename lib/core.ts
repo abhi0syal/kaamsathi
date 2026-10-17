@@ -396,6 +396,34 @@ export async function handleMessage(
       : "Send the company/app, issue, date and amount. Do not include sensitive IDs. I'll draft a complaint for your review; it won't be sent automatically.")];
   }
 
+  // Handle feature-specific free text before the government-scheme RAG path.
+  if (state.flowState === "earnings" && rawText && !triggerId) {
+    const nums = rawText.match(/\\d[\\d,]*(?:\\.\\d{1,2})?/g);
+    const values = (nums || []).map((v) => Number(v.replace(/,/g, ""))).filter((v) => Number.isFinite(v) && v >= 0);
+    if (values.length < 2) return [createReply(currentLang === "hi" ? "कमाई और कम-से-कम एक खर्च लिखें। उदाहरण: कमाई 1200, पेट्रोल 200।" : "Please include earnings and at least one expense. Example: earnings 1200, fuel 200.")];
+    const money = (n: number) => "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+    const income = values[0];
+    const costs = values.slice(1).reduce((sum, n) => sum + n, 0);
+    return [createReply(currentLang === "hi"
+      ? "💰 अनुमानित हिसाब\\nकमाई: " + money(income) + "\\nदर्ज खर्च: " + money(costs) + "\\nखर्च के बाद: " + money(income - costs) + "\\nयह आपके संदेश में दिए गए अंकों पर आधारित है।"
+      : "💰 Earnings estimate\\nEarnings: " + money(income) + "\\nExpenses (remaining amounts): " + money(costs) + "\\nAfter expenses: " + money(income - costs) + "\\nBased only on the numbers you provided.")];
+  }
+
+  if (state.flowState === "grievance" && rawText && !triggerId) {
+    const draft = currentLang === "hi"
+      ? "शिकायत का मसौदा — भेजने से पहले जाँचें\\n\\nसेवा टीम के नाम,\\n\\nमैं इस समस्या की शिकायत दर्ज करना चाहता/चाहती हूँ: " + rawText + "\\nकृपया जाँच करें, समाधान और समय-सीमा लिखित में दें तथा शिकायत संख्या साझा करें।\\n\\nसादर,\\n[अपना नाम भरें]"
+      : "Complaint draft — review before sending\\n\\nTo the Support Team,\\n\\nI am raising a complaint about: " + rawText + "\\nPlease investigate, explain the resolution and timeline in writing, and share a complaint reference number.\\n\\nRegards,\\n[Your name]";
+    return [createReply(draft + (currentLang === "hi" ? "\\n\\nतथ्य जाँचें और केवल सही जानकारी भेजें।" : "\\n\\nCheck facts and edit placeholders before sending."))];
+  }
+
+  if (state.flowState === "document_help" && rawText && !triggerId) {
+    const answer = await answerWithSources(
+      (currentLang === "hi" ? "दिए गए दस्तावेज़ के पाठ को सरल हिंदी में समझाएं। जानकारी न गढ़ें। पाठ: " : "Explain the following document text in simple English without inventing details. Text: ") + rawText,
+      currentLang
+    );
+    return [createReply(answer.answer)];
+  }
+
   // Pre-set quick questions
   if (triggerId === "q_eshram") {
     rawText = "What is e-Shram portal and who is eligible?";
