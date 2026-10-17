@@ -59,11 +59,7 @@ function getMainMenu(lang: SupportedLanguage = "en"): OutboundReply {
   if (lang === "hi") {
     return createReply(
       "नीचे मेनू से एक विकल्प चुनें: 📋",
-      [
-        { id: "menu_rights", title: "📜 योजनाएं व अधिकार" },
-        { id: "menu_earnings", title: "💰 कमाई" },
-        { id: "menu_safety", title: "🛡️ सुरक्षा" },
-      ],
+      undefined,
       [
         { id: "menu_earnings", title: "💰 कमाई (Earnings)", description: "दैनिक कमाई और पेट्रोल खर्च" },
         { id: "menu_safety", title: "🛡️ सुरक्षा (Safety)", description: "सड़क सुरक्षा और मौसम नियम" },
@@ -76,11 +72,7 @@ function getMainMenu(lang: SupportedLanguage = "en"): OutboundReply {
 
   return createReply(
     "Choose an option from the menu: 📋",
-    [
-      { id: "menu_rights", title: "📜 Rights & Schemes" },
-      { id: "menu_earnings", title: "💰 Earnings" },
-      { id: "menu_safety", title: "🛡️ Safety" },
-    ],
+    undefined,
     [
       { id: "menu_earnings", title: "💰 Earnings", description: "Log daily trips and fuel expenses" },
       { id: "menu_safety", title: "🛡️ Safety", description: "Road safety tips & weather advice" },
