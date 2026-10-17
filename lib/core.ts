@@ -193,6 +193,7 @@ export async function handleMessage(
     const nextState: UserState = {
       hashedUserId,
       consentGiven: state?.consentGiven || false,
+      lang: undefined,
       flowState: "awaiting_language",
       lastActive: Date.now(),
     };
@@ -288,9 +289,13 @@ export async function handleMessage(
     }
 
     state.lang = chosenLang;
-    state.flowState = "awaiting_consent";
+    state.flowState = state.consentGiven ? "menu" : "awaiting_consent";
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
+
+    if (state.consentGiven) {
+      return [createReply(chosenLang === "hi" ? "भाषा बदल दी गई है। 🤝" : "Language updated. 🤝"), getMainMenu(chosenLang)];
+    }
 
     if (chosenLang === "hi") {
       return [
@@ -404,24 +409,58 @@ export async function handleMessage(
     const money = (n: number) => "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 2 });
     const income = values[0];
     const costs = values.slice(1).reduce((sum, n) => sum + n, 0);
-    return [createReply(currentLang === "hi"
-      ? "💰 अनुमानित हिसाब\nकमाई: " + money(income) + "\nदर्ज खर्च: " + money(costs) + "\nखर्च के बाद: " + money(income - costs) + "\nयह आपके संदेश में दिए गए अंकों पर आधारित है।"
-      : "💰 Earnings estimate\nEarnings: " + money(income) + "\nExpenses (remaining amounts): " + money(costs) + "\nAfter expenses: " + money(income - costs) + "\nBased only on the numbers you provided.")];
+    state.flowState = "menu";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
+    return [
+      createReply(currentLang === "hi"
+        ? "💰 अनुमानित हिसाब\nकमाई: " + money(income) + "\nदर्ज खर्च: " + money(costs) + "\nखर्च के बाद: " + money(income - costs) + "\nयह आपके संदेश में दिए गए अंकों पर आधारित है।"
+        : "💰 Earnings estimate\nEarnings: " + money(income) + "\nExpenses (remaining amounts): " + money(costs) + "\nAfter expenses: " + money(income - costs) + "\nBased only on the numbers you provided."),
+      getMainMenu(currentLang),
+    ];
   }
 
   if (state.flowState === "grievance" && rawText && !triggerId) {
     const draft = currentLang === "hi"
       ? "शिकायत का मसौदा — भेजने से पहले जाँचें\n\nसेवा टीम के नाम,\n\nमैं इस समस्या की शिकायत दर्ज करना चाहता/चाहती हूँ: " + rawText + "\nकृपया जाँच करें, समाधान और समय-सीमा लिखित में दें तथा शिकायत संख्या साझा करें।\n\nसादर,\n[अपना नाम भरें]"
       : "Complaint draft — review before sending\n\nTo the Support Team,\n\nI am raising a complaint about: " + rawText + "\nPlease investigate, explain the resolution and timeline in writing, and share a complaint reference number.\n\nRegards,\n[Your name]";
-    return [createReply(draft + (currentLang === "hi" ? "\n\nतथ्य जाँचें और केवल सही जानकारी भेजें।" : "\n\nCheck facts and edit placeholders before sending."))];
+    state.flowState = "menu";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
+    return [
+      createReply(draft + (currentLang === "hi" ? "\n\nतथ्य जाँचें और केवल सही जानकारी भेजें।" : "\n\nCheck facts and edit placeholders before sending.")),
+      getMainMenu(currentLang),
+    ];
   }
 
   if (state.flowState === "document_help" && rawText && !triggerId) {
-    const answer = await answerWithSources(
-      (currentLang === "hi" ? "दिए गए दस्तावेज़ के पाठ को सरल हिंदी में समझाएं। जानकारी न गढ़ें। पाठ: " : "Explain the following document text in simple English without inventing details. Text: ") + rawText,
-      currentLang
-    );
-    return [createReply(answer.answer)];
+    let explanation = "";
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (apiKey && apiKey !== "your_gemini_api_key_here") {
+      try {
+        const ai = new GoogleGenAI({ apiKey });
+        const response = await ai.models.generateContent({
+          model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+          contents: [{
+            text: currentLang === "hi"
+              ? "आप भारत के कामगारों के लिए सरल भाषा में दस्तावेज़ समझाने वाले सहायक हैं। नीचे दिए पाठ को हिंदी में समझाएं: (1) यह किस बारे में है, (2) उपयोगकर्ता को क्या करना है, (3) समय-सीमा/जुर्माना/अपील का उल्लेख हो तो उसे बताएं, (4) कौन-सी जानकारी अधूरी या संदिग्ध है। केवल पाठ से समर्थित बातें कहें; कानून या समय-सीमा न गढ़ें। यदि यह पुलिस चालान है, तो चालान नंबर/राज्य/तारीख छिपाकर साझा करने और आधिकारिक राज्य ट्रैफिक पोर्टल/चालान पर निर्देश जाँचने की सलाह दें। आधार, बैंक विवरण और OTP साझा न करने की याद दिलाएं.\n\nदस्तावेज़ का पाठ:\n" + rawText
+              : "You explain documents to Indian workers in plain English. Explain this text in simple terms: (1) what it is about, (2) what the user should do next, (3) any deadline, fine, or appeal mentioned, and (4) what details are missing or suspicious. Only state facts supported by the text; do not invent law or deadlines. If it is a police traffic challan, advise checking the official state traffic/e-challan portal and not sharing full challan/ID/bank details or OTPs.\n\nDocument text:\n" + rawText
+          }]
+        });
+        explanation = (response?.text || "").trim();
+      } catch (err) {
+        console.error("Document explanation error:", err);
+      }
+    }
+    if (!explanation) {
+      explanation = currentLang === "hi"
+        ? "मैं इस दस्तावेज़ का पूरा अर्थ अभी AI से नहीं समझा पाया। सामान्य तौर पर, पहले जारी करने वाले विभाग, तारीख, संदर्भ/चालान नंबर, मांगी गई कार्रवाई और अंतिम तारीख देखें। पुलिस चालान के लिए केवल आधिकारिक राज्य ट्रैफिक/e-challan पोर्टल पर विवरण जाँचें। सही सलाह के लिए राज्य और नोटिस का संवेदनशील जानकारी हटाया हुआ पाठ साझा करें। आधार, बैंक विवरण या OTP न भेजें।"
+        : "I couldn't generate a full AI explanation right now. Check the issuing department, date, reference/challan number, requested action, and any deadline. For a police traffic challan, verify it only on the official state traffic/e-challan portal. Share the state and a redacted notice text for more specific help. Do not share Aadhaar, bank details, or OTPs.";
+    }
+    state.flowState = "menu";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
+    return [createReply(explanation), getMainMenu(currentLang)];
   }
 
   // Pre-set quick questions
@@ -477,6 +516,9 @@ export async function handleMessage(
     // Answer via verified KB RAG pipeline
     const answerResult = await answerWithSources(rawText, currentLang);
 
+    state.flowState = "menu";
+    state.lastActive = Date.now();
+    await setUserState(hashedUserId, state);
     return [
       createReply(
         answerResult.answer,
@@ -485,6 +527,7 @@ export async function handleMessage(
           { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
         ]
       ),
+      getMainMenu(currentLang),
     ];
   }
 
