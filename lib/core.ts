@@ -366,61 +366,34 @@ export async function handleMessage(
     ];
   }
 
-  // Stubs for other modules
   if (triggerId === "menu_earnings") {
-    return [
-      createReply(
-        currentLang === "hi"
-          ? "💰 **कमाई ट्रैकिंग**: यह मॉड्यूल अगले चरण में आ रहा है! आप दैनिक कमाई और पेट्रोल खर्च आसानी से दर्ज कर सकेंगे।"
-          : "💰 **Earnings Tracker**: Coming in next step! You will be able to log daily earnings and petrol expenses.",
-        [
-          { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Rights & Schemes" },
-          { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-        ]
-      ),
-    ];
+    state.flowState = "earnings";
+    await setUserState(hashedUserId, state);
+    return [createReply(currentLang === "hi"
+      ? "आज की कमाई और खर्च लिखें। उदाहरण: कमाई 1200, पेट्रोल 200, खाना 80।"
+      : "Enter today's earnings and expenses. Example: earnings 1200, fuel 200, food 80. I'll calculate an estimate.")];
   }
 
   if (triggerId === "menu_safety") {
-    return [
-      createReply(
-        currentLang === "hi"
-          ? "🛡️ **सुरक्षा गाइड**: यह मॉड्यूल अगले चरण में आ रहा है! सड़क सुरक्षा चेकलिस्ट और आपातकालीन नियम जल्द उपलब्ध होंगे।"
-          : "🛡️ **Safety Guide**: Coming in next step! Road safety checklists and weather advisories will be available.",
-        [
-          { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Rights & Schemes" },
-          { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-        ]
-      ),
-    ];
+    return [createReply(currentLang === "hi"
+      ? "🛡️ सुरक्षा: हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर/लाइट जाँचें और थकान या खराब दृश्यता में सुरक्षित जगह रुकें। तत्काल आपातकाल में भारत में 112 पर कॉल करें।"
+      : "🛡️ Safety: wear a fastened helmet, never use your phone while driving, check brakes/tyres/lights, and stop safely if tired or visibility is poor. For an immediate emergency in India, call 112.")];
   }
 
   if (triggerId === "menu_docs") {
-    return [
-      createReply(
-        currentLang === "hi"
-          ? "📄 **दस्तावेज़ सहायता**: यह मॉड्यूल अगले चरण में आ रहा है! आप आधार, ड्राइविंग लाइसेंस और आरसी की जानकारी समझ सकेंगे।"
-          : "📄 **Document Help**: Coming in next step! Scan and understand official notices, RC, and Aadhaar guidelines.",
-        [
-          { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Rights & Schemes" },
-          { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-        ]
-      ),
-    ];
+    state.flowState = "document_help";
+    await setUserState(hashedUserId, state);
+    return [createReply(currentLang === "hi"
+      ? "नोटिस या दस्तावेज़ का टेक्स्ट लिखें, मैं सरल भाषा में समझाऊँगा। आधार/बैंक नंबर या OTP साझा न करें।"
+      : "Paste text from a notice or document and I'll explain it simply. Do not share Aadhaar/bank numbers or OTPs.")];
   }
 
   if (triggerId === "menu_complaint") {
-    return [
-      createReply(
-        currentLang === "hi"
-          ? "✍️ **शिकायत लेखन**: यह मॉड्यूल अगले चरण में आ रहा है! प्लेटफ़ॉर्म आईडी ब्लॉक या रोके गए पैसों के लिए शिकायत पत्र तैयार होगा।"
-          : "✍️ **Write a Complaint**: Coming in next step! Draft formal grievance letters for withheld payouts or unfair bans.",
-        [
-          { id: "menu_rights", title: currentLang === "hi" ? "📜 योजनाएं देखें" : "📜 Rights & Schemes" },
-          { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-        ]
-      ),
-    ];
+    state.flowState = "grievance";
+    await setUserState(hashedUserId, state);
+    return [createReply(currentLang === "hi"
+      ? "कंपनी/ऐप, समस्या, तारीख और राशि लिखें। संवेदनशील जानकारी न भेजें। मैं समीक्षा के लिए शिकायत ड्राफ्ट बनाऊँगा; यह अपने-आप नहीं भेजा जाएगा।"
+      : "Send the company/app, issue, date and amount. Do not include sensitive IDs. I'll draft a complaint for your review; it won't be sent automatically.")];
   }
 
   // Pre-set quick questions
