@@ -52,7 +52,7 @@ export default function WebChatPage() {
       const res = await fetch("/api/web/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: uid, type: "text", text: "hi" }),
+        body: JSON.stringify({ userId: uid, type: "text", text: "LANGUAGE" }),
       });
       const data = await res.json();
       if (data.replies && data.replies.length > 0) {
