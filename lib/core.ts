@@ -464,7 +464,7 @@ export async function handleMessage(
       }
     }
     if (!explanation) {
-      const looksLikeTemplate = /\\[[^\\]]{2,}\\]|insert date|insert helpline|department name|official seal|applicable act|state\\/national territory/i.test(rawText);
+      const looksLikeTemplate = /\[[^\]]{2,}\]|insert date|insert helpline|department name|official seal|applicable act|state\/national territory/i.test(rawText);
       if (looksLikeTemplate) {
         explanation = currentLang === "hi"
           ? "📄 **सरल अर्थ:** यह गिग/प्लेटफ़ॉर्म कामगारों के पंजीकरण, बीमा/कल्याण लाभ, भुगतान की पारदर्शिता और शिकायत करने के तरीकों के बारे में एक मसौदा नोटिस है।\n\n⚠️ **महत्वपूर्ण:** यह अभी आधिकारिक नोटिस साबित नहीं होता। इसमें [विभाग], [तारीख], [कानून], [हेल्पलाइन] और [मुहर] जैसे खाली स्थान हैं। इसमें बताए गए अधिकारों/लाभों को सत्यापित तथ्य न मानें।\n\n✅ **क्या करें:** राज्य/विभाग का नाम, जारी करने की तारीख, हस्ताक्षर/मुहर और आधिकारिक सरकारी वेबसाइट से पुष्टि करें। किसी लिंक या नंबर पर भरोसा करने से पहले उसे सरकारी साइट पर जाँचें। आधार, बैंक विवरण या OTP साझा न करें।"
@@ -475,7 +475,7 @@ export async function handleMessage(
           : "I couldn't connect to the AI document explainer just now, so I can't safely summarize this document yet. Check the issuing authority, date, requested action, and any deadline. You can retry with a shorter redacted excerpt. Do not share Aadhaar, bank details, or OTPs.";
       }
     }
-    explanation += currentLang === "hi" ? "\\n\\nमुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType MENU to return to the main menu.";
+    explanation += currentLang === "hi" ? "\n\nमुख्य मेनू के लिए MENU लिखें।" : "\n\nType MENU to return to the main menu.";
     state.flowState = "menu";
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
@@ -529,10 +529,7 @@ export async function handleMessage(
       state.flowState = "menu";
       state.lastActive = Date.now();
       await setUserState(hashedUserId, state);
-      state.flowState = "menu";
-      state.lastActive = Date.now();
-      await setUserState(hashedUserId, state);
-      return [createReply(text + (currentLang === "hi" ? "\\n\\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
     }
     if (/pmjjby|jeevan jyoti|जीवन ज्योति/.test(schemeQuestion)) {
       const text = currentLang === "hi"
@@ -541,7 +538,7 @@ export async function handleMessage(
       state.flowState = "menu";
       state.lastActive = Date.now();
       await setUserState(hashedUserId, state);
-      return [createReply(text + (currentLang === "hi" ? "\\n\\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
     }
 
     // Answer via verified KB RAG pipeline
