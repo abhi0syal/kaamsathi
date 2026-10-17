@@ -521,7 +521,7 @@ export async function handleMessage(
       state.flowState = "menu";
       state.lastActive = Date.now();
       await setUserState(hashedUserId, state);
-      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."))];
     }
     if (/pmjjby|jeevan jyoti|जीवन ज्योति/.test(schemeQuestion)) {
       const text = currentLang === "hi"
@@ -530,7 +530,7 @@ export async function handleMessage(
       state.flowState = "menu";
       state.lastActive = Date.now();
       await setUserState(hashedUserId, state);
-      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      return [createReply(text + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu."))];
     }
 
     // Answer via verified KB RAG pipeline
@@ -540,13 +540,7 @@ export async function handleMessage(
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
     return [
-      createReply(
-        answerResult.answer,
-        [
-          { id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" },
-          { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
-        ]
-      ),
+      createReply(answerResult.answer + (currentLang === "hi" ? "\n\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\n\nType another question to continue, or type MENU to return to the main menu.")),
     ];
   }
 
