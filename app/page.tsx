@@ -224,7 +224,7 @@ export default function WebChatPage() {
             <h1 className="font-semibold text-base leading-tight">KaamSathi (कामसाथी)</h1>
             <p className="text-xs text-emerald-200 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-              Govt Verified AI Sahayak
+              AI Sahayak • Official Sources
             </p>
           </div>
         </div>
