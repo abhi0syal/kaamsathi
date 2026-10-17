@@ -495,9 +495,12 @@ export async function handleMessage(
         return [createReply(currentLang === "hi" ? "कमाई और खर्च लिखें। उदाहरण: कमाई 1200, पेट्रोल 200।" : "Enter earnings and expenses. Example: earnings 1200, fuel 200.")];
       }
       if (intent.category === "safety") {
-        return [createReply(currentLang === "hi"
-          ? "🛡️ हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर जाँचें और थकान में सुरक्षित जगह रुकें। तत्काल आपातकाल में 112 पर कॉल करें।"
-          : "🛡️ Wear a fastened helmet, don't use your phone while driving, check brakes/tyres, and stop safely if tired. Call 112 for an immediate emergency in India.")];
+        return [
+          createReply(currentLang === "hi"
+            ? "🛡️ हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर जाँचें और थकान में सुरक्षित जगह रुकें। तत्काल आपातकाल में 112 पर कॉल करें।"
+            : "🛡️ Wear a fastened helmet, don't use your phone while driving, check brakes/tyres, and stop safely if tired. Call 112 for an immediate emergency in India."),
+          getMainMenu(currentLang),
+        ];
       }
       if (intent.category === "document_help") {
         state.flowState = "document_help";
