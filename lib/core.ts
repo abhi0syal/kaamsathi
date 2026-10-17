@@ -384,10 +384,9 @@ export async function handleMessage(
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
     return [
-      createReply(currentLang === "hi"
+      createReply((currentLang === "hi"
         ? "🛡️ सुरक्षा: हेलमेट बाँधें, वाहन चलाते समय फोन न देखें, ब्रेक/टायर/लाइट जाँचें और थकान या खराब दृश्यता में सुरक्षित जगह रुकें। तत्काल आपातकाल में भारत में 112 पर कॉल करें।"
-        : "🛡️ Safety: wear a fastened helmet, never use your phone while driving, check brakes/tyres/lights, and stop safely if tired or visibility is poor. For an immediate emergency in India, call 112."),
-      getMainMenu(currentLang),
+        : "🛡️ Safety: wear a fastened helmet, never use your phone while driving, check brakes/tyres/lights, and stop safely if tired or visibility is poor.") + (currentLang === "hi" ? "\n\nमुख्य मेनू के लिए MENU लिखें।" : "\n\nType MENU to return to the main menu.")),
     ];
   }
 
@@ -427,9 +426,9 @@ export async function handleMessage(
     await setUserState(hashedUserId, state);
     return [
       createReply(currentLang === "hi"
-        ? "💰 अनुमानित हिसाब\nकमाई: " + money(income) + "\nदर्ज खर्च: " + money(costs) + "\nखर्च के बाद: " + money(income - costs) + "\nयह आपके संदेश में दिए गए अंकों पर आधारित है।"
-        : "💰 Earnings estimate\nEarnings: " + money(income) + "\nExpenses (remaining amounts): " + money(costs) + "\nAfter expenses: " + money(income - costs) + "\nBased only on the numbers you provided."),
-      getMainMenu(currentLang),
+        ? "💰 अनुमानित हिसाब\nकमाई: " + money(income) + "\nदर्ज खर्च: " + money(costs) + "\nखर्च के बाद: " + money(income - costs) + "\nयह आपके संदेश में दिए गए अंकों पर आधारित है।\n\nमुख्य मेनू के लिए MENU लिखें।"
+        : "💰 Earnings estimate\nEarnings: " + money(income) + "\nExpenses: " + money(costs) + "\nAfter expenses: " + money(income - costs) + "\nBased only on the numbers you provided.\n\nType MENU to return to the main menu.")
+
     ];
   }
 
@@ -441,8 +440,7 @@ export async function handleMessage(
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
     return [
-      createReply(draft + (currentLang === "hi" ? "\n\nतथ्य जाँचें और केवल सही जानकारी भेजें।" : "\n\nCheck facts and edit placeholders before sending.")),
-      getMainMenu(currentLang),
+      createReply(draft + (currentLang === "hi" ? "\n\nतथ्य जाँचें और केवल सही जानकारी भेजें।\nमुख्य मेनू के लिए MENU लिखें।" : "\n\nCheck facts and edit placeholders before sending.\n\nType MENU to return to the main menu.")),
     ];
   }
 
@@ -466,14 +464,22 @@ export async function handleMessage(
       }
     }
     if (!explanation) {
-      explanation = currentLang === "hi"
-        ? "मैं इस दस्तावेज़ का पूरा अर्थ अभी AI से नहीं समझा पाया। सामान्य तौर पर, पहले जारी करने वाले विभाग, तारीख, संदर्भ/चालान नंबर, मांगी गई कार्रवाई और अंतिम तारीख देखें। पुलिस चालान के लिए केवल आधिकारिक राज्य ट्रैफिक/e-challan पोर्टल पर विवरण जाँचें। सही सलाह के लिए राज्य और नोटिस का संवेदनशील जानकारी हटाया हुआ पाठ साझा करें। आधार, बैंक विवरण या OTP न भेजें।"
-        : "I couldn't generate a full AI explanation right now. Check the issuing department, date, reference/challan number, requested action, and any deadline. For a police traffic challan, verify it only on the official state traffic/e-challan portal. Share the state and a redacted notice text for more specific help. Do not share Aadhaar, bank details, or OTPs.";
+      const looksLikeTemplate = /\\[[^\\]]{2,}\\]|insert date|insert helpline|department name|official seal|applicable act|state\\/national territory/i.test(rawText);
+      if (looksLikeTemplate) {
+        explanation = currentLang === "hi"
+          ? "📄 **सरल अर्थ:** यह गिग/प्लेटफ़ॉर्म कामगारों के पंजीकरण, बीमा/कल्याण लाभ, भुगतान की पारदर्शिता और शिकायत करने के तरीकों के बारे में एक मसौदा नोटिस है।\n\n⚠️ **महत्वपूर्ण:** यह अभी आधिकारिक नोटिस साबित नहीं होता। इसमें [विभाग], [तारीख], [कानून], [हेल्पलाइन] और [मुहर] जैसे खाली स्थान हैं। इसमें बताए गए अधिकारों/लाभों को सत्यापित तथ्य न मानें।\n\n✅ **क्या करें:** राज्य/विभाग का नाम, जारी करने की तारीख, हस्ताक्षर/मुहर और आधिकारिक सरकारी वेबसाइट से पुष्टि करें। किसी लिंक या नंबर पर भरोसा करने से पहले उसे सरकारी साइट पर जाँचें। आधार, बैंक विवरण या OTP साझा न करें।"
+          : "📄 **In simple terms:** This appears to be a draft notice about gig-worker registration, possible insurance/welfare benefits, transparent platform payouts, and how to raise complaints.\n\n⚠️ **Important:** It does NOT look like a completed official notice. It contains placeholders such as [department], [date], [applicable law], [helpline number], and [official seal]. Treat the claims about benefits and legal duties as unverified until checked.\n\n✅ **What to do:** Confirm the issuing department, publication date, signed/sealed final copy, and the notice on an official government website. Verify any helpline number independently. Do not share Aadhaar, bank details, or OTPs.";
+      } else {
+        explanation = currentLang === "hi"
+          ? "मैं अभी AI से इस दस्तावेज़ का विश्लेषण पूरा नहीं कर पाया। इसमें जारी करने वाला विभाग, तारीख, मांगी गई कार्रवाई और समय-सीमा देखें। संवेदनशील नंबर हटाकर दस्तावेज़ का छोटा हिस्सा फिर भेजें; आधार, बैंक विवरण या OTP न भेजें। मुख्य मेनू के लिए MENU लिखें।"
+          : "I couldn't connect to the AI document explainer just now, so I can't safely summarize this document yet. Check the issuing authority, date, requested action, and any deadline. You can retry with a shorter redacted excerpt. Do not share Aadhaar, bank details, or OTPs.";
+      }
     }
+    explanation += currentLang === "hi" ? "\\n\\nमुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType MENU to return to the main menu.";
     state.flowState = "menu";
     state.lastActive = Date.now();
     await setUserState(hashedUserId, state);
-    return [createReply(explanation), getMainMenu(currentLang)];
+    return [createReply(explanation)];
   }
 
   // Pre-set quick questions
@@ -523,16 +529,19 @@ export async function handleMessage(
       state.flowState = "menu";
       state.lastActive = Date.now();
       await setUserState(hashedUserId, state);
-      return [
-        createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }]),
-        getMainMenu(currentLang),
-      ];
+      state.flowState = "menu";
+      state.lastActive = Date.now();
+      await setUserState(hashedUserId, state);
+      return [createReply(text + (currentLang === "hi" ? "\\n\\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
     }
     if (/pmjjby|jeevan jyoti|जीवन ज्योति/.test(schemeQuestion)) {
       const text = currentLang === "hi"
         ? "🛡️ PMJJBY जीवन बीमा योजना है, जिसमें मृत्यु पर ₹2 लाख का कवर है। आम तौर पर 18–50 वर्ष के बैंक/डाकघर खाता धारक आवेदन कर सकते हैं। मौजूदा प्रीमियम और शर्तें अपने बैंक से जाँचें.\n\nआधिकारिक स्रोत: https://jansuraksha.gov.in"
         : "🛡️ PMJJBY is a life-insurance scheme with ₹2 lakh cover for death. Generally, bank/post-office account holders aged 18–50 can enrol. Confirm the current premium and terms with your bank.\n\nOfficial source: https://jansuraksha.gov.in";
-      return [createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+      state.flowState = "menu";
+      state.lastActive = Date.now();
+      await setUserState(hashedUserId, state);
+      return [createReply(text + (currentLang === "hi" ? "\\n\\nदूसरा सवाल पूछने के लिए अपना सवाल लिखें। मुख्य मेनू के लिए MENU लिखें।" : "\\n\\nType another question to continue, or type MENU to return to the main menu."), [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
     }
 
     // Answer via verified KB RAG pipeline
@@ -549,7 +558,6 @@ export async function handleMessage(
           { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" },
         ]
       ),
-      getMainMenu(currentLang),
     ];
   }
 
