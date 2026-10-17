@@ -459,6 +459,21 @@ export async function handleMessage(
       }
     }
 
+    // Handle the two common scheme questions directly so they always show an official reference.
+    const schemeQuestion = rawText.toLowerCase();
+    if (/e[ -]?shram|ई-श्रम|esharm/.test(schemeQuestion)) {
+      const text = currentLang === "hi"
+        ? "📜 ई-श्रम कार्ड असंगठित कामगारों के पंजीकरण के लिए है। मौजूदा पात्रता और आवेदन नियम आधिकारिक पोर्टल पर जाँचें। ऑनलाइन आवेदन करें या नज़दीकी CSC से सहायता लें.\n\nआधिकारिक स्रोत: https://eshram.gov.in"
+        : "📜 The e-Shram card registers unorganised workers. Check current eligibility and application rules on the official portal. Register online or seek help at a nearby Common Service Centre (CSC).\n\nOfficial source: https://eshram.gov.in";
+      return [createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+    }
+    if (/pmjjby|jeevan jyoti|जीवन ज्योति/.test(schemeQuestion)) {
+      const text = currentLang === "hi"
+        ? "🛡️ PMJJBY जीवन बीमा योजना है, जिसमें मृत्यु पर ₹2 लाख का कवर है। आम तौर पर 18–50 वर्ष के बैंक/डाकघर खाता धारक आवेदन कर सकते हैं। मौजूदा प्रीमियम और शर्तें अपने बैंक से जाँचें.\n\nआधिकारिक स्रोत: https://jansuraksha.gov.in"
+        : "🛡️ PMJJBY is a life-insurance scheme with ₹2 lakh cover for death. Generally, bank/post-office account holders aged 18–50 can enrol. Confirm the current premium and terms with your bank.\n\nOfficial source: https://jansuraksha.gov.in";
+      return [createReply(text, [{ id: "menu_rights", title: currentLang === "hi" ? "❓ दूसरा सवाल" : "❓ Ask Another" }, { id: "cmd_menu", title: currentLang === "hi" ? "🏠 मुख्य मेनू" : "🏠 Main Menu" }])];
+    }
+
     // Answer via verified KB RAG pipeline
     const answerResult = await answerWithSources(rawText, currentLang);
 
