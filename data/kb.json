@@ -1,0 +1,92 @@
+[
+  {
+    "id": "eshram",
+    "title": "e-Shram Portal (National Database of Unorganized Workers)",
+    "summary": "e-Shram is a national portal launched by the Ministry of Labour and Employment to register unorganized workers and issue a 12-digit Universal Account Number (UAN) e-Shram card. It enables delivery of social security benefits, accident insurance, and government welfare schemes directly to informal workers.",
+    "eligibility_notes": "Worker must be an unorganised or gig/platform worker aged between 16 and 59 years. Must not be an income taxpayer or an active member of EPFO, ESIC, or NPS.",
+    "how_to_apply": "Self-register for free at eshram.gov.in using Aadhaar number, Aadhaar-linked mobile number, and bank account details. Alternatively, visit the nearest Common Service Centre (CSC) for assisted biometric registration.",
+    "source_name": "Ministry of Labour and Employment, Government of India",
+    "source_url": "https://eshram.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "pmsym",
+    "title": "Pradhan Mantri Shram Yogi Maan-dhan (PM-SYM)",
+    "summary": "A voluntary and contributory pension scheme for unorganized and gig workers that guarantees a minimum monthly pension of Rs 3,000 after attaining the age of 60 years. The central government provides an equal 50% matching contribution.",
+    "eligibility_notes": "Unorganized workers aged 18 to 40 years with monthly income of Rs 15,000 or less. Must not be covered under EPFO, ESIC, or NPS, and must not be an income tax payer.",
+    "how_to_apply": "Enroll online at maandhan.in or visit a Common Service Centre (CSC) with Aadhaar card and savings bank account/Jan Dhan account passbook. Monthly contribution ranges from Rs 55 to Rs 200 depending on entry age.",
+    "source_name": "Ministry of Labour and Employment (Maan-dhan Portal)",
+    "source_url": "https://maandhan.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "pmjjby",
+    "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+    "summary": "A government-backed life insurance scheme providing Rs 2,00,000 life cover for death due to any reason. The policy is renewable annually and provides affordable financial protection to workers' families.",
+    "eligibility_notes": "Individuals aged 18 to 50 years holding an active individual savings bank account or post office account, who give consent for annual auto-debit. Aadhaar is primary KYC.",
+    "how_to_apply": "Apply through net banking, mobile banking, or submit the consent-cum-declaration form at your bank branch or post office. Annual premium is Rs 436 auto-debited annually before May 31.",
+    "source_name": "Department of Financial Services, JanSuraksha Portal",
+    "source_url": "https://jansuraksha.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "pmsby",
+    "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+    "summary": "An affordable accident insurance scheme providing Rs 2,00,000 for accidental death or permanent total disability, and Rs 1,00,000 for permanent partial disability.",
+    "eligibility_notes": "Individuals aged 18 to 70 years with an active savings bank account or post office account, who give consent for auto-debit of premium.",
+    "how_to_apply": "Enrol through bank net banking, mobile app, or visit your bank branch/post office. Premium is Rs 20 per annum auto-debited annually in May.",
+    "source_name": "Department of Financial Services, JanSuraksha Portal",
+    "source_url": "https://jansuraksha.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "pmjay",
+    "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)",
+    "summary": "The world's largest health assurance scheme providing health cover of Rs 5 lakh per family per year for secondary and tertiary care hospitalization across empanelled public and private hospitals cashless.",
+    "eligibility_notes": "Entitlement-based scheme covering bottom 40% vulnerable and poor families identified by SECC 2011 criteria (including occupational categories of urban workers like delivery and transport workers), plus all citizens aged 70 years and above irrespective of income.",
+    "how_to_apply": "Check eligibility at beneficiary.nha.gov.in with mobile number, Aadhaar, or ration card number. Complete e-KYC online with Aadhaar OTP to download the Ayushman card, or visit any empanelled hospital or Common Service Centre (CSC).",
+    "source_name": "National Health Authority (NHA), Government of India",
+    "source_url": "https://beneficiary.nha.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "code_social_security_2020",
+    "title": "Code on Social Security 2020 (Gig and Platform Workers Provisions)",
+    "summary": "India's central legislation that legally defines gig workers [Section 2(35)] and platform workers [Section 2(61)], mandating social security schemes for health, life, accident, disability, and old age funded via aggregator contributions (1% to 2% turnover cap) into a central Social Security Fund.",
+    "eligibility_notes": "Covers any person performing work or participating in a work arrangement outside traditional employer-employee relationship, including platform app-based workers (food delivery, ride hailing, logistics).",
+    "how_to_apply": "Registration is mandated through government electronic portals (such as e-Shram) using Aadhaar-linked self-declaration. Aggregators are required to register and contribute.",
+    "source_name": "Ministry of Labour and Employment, Government of India",
+    "source_url": "https://labour.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "rajasthan_gig_workers_act",
+    "title": "Rajasthan Platform Based Gig Workers (Registration and Welfare) Act 2023",
+    "summary": "State legislation establishing the Rajasthan Platform Based Gig Workers Welfare Board and a dedicated Social Security and Welfare Fund financed through a transaction-based welfare fee/cess (up to 2%) on aggregators, granting unique worker IDs and grievance redressal.",
+    "eligibility_notes": "All platform-based gig workers engaged with digital aggregators (ride-hailing, food delivery, logistics, e-commerce) operating within the state of Rajasthan.",
+    "how_to_apply": "Aggregators must register onboarded workers with the Welfare Board upon onboarding. Workers receive a statewide Unique ID tracking entitlements and benefits across platforms.",
+    "source_name": "Government of Rajasthan (Labour & Finance Departments)",
+    "source_url": "https://finance.rajasthan.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "karnataka_gig_worker_scheme",
+    "title": "Karnataka State Gig Workers Insurance Scheme",
+    "summary": "A state-funded composite insurance package for registered platform delivery personnel and gig workers providing Rs 2,00,000 life insurance, Rs 2,00,000 accidental death cover, up to Rs 2,00,000 permanent disability, and up to Rs 1,00,000 accident hospitalization reimbursement.",
+    "eligibility_notes": "Active platform gig workers in Karnataka aged 18 to 60 years who are non-taxpayers and registered on Seva Sindhu or e-Shram.",
+    "how_to_apply": "Register on Karnataka Seva Sindhu portal (sevasindhu.karnataka.gov.in) with e-Shram UAN and platform partner ID. Accident insurance claims can be filed through the Labour Department within one year of incident.",
+    "source_name": "Department of Labour, Government of Karnataka",
+    "source_url": "https://karnataka.gov.in",
+    "last_verified": "2026-10-17"
+  },
+  {
+    "id": "motor_vehicles_act_basics",
+    "title": "Motor Vehicles Act - Essential Rules for Commercial & Gig Drivers",
+    "summary": "Key legal road safety requirements under the Motor Vehicles Act: mandatory BIS-approved helmet for two-wheeler riders (Section 129), valid Driving Licence (Section 3/181), mandatory Third-Party Insurance (Section 146/196), and valid transport permits for commercial vehicles.",
+    "eligibility_notes": "All riders and drivers operating motor vehicles on Indian roads. Delivery partners on two-wheelers must wear strapped BIS-certified helmets and carry valid DL and third-party insurance.",
+    "how_to_apply": "Access DL services, vehicle registration, and verify insurance status on parivahan.gov.in (Sarathi and Vahan portals) or via mParivahan app. Verify traffic challans on echallan.parivahan.gov.in.",
+    "source_name": "Ministry of Road Transport and Highways (MoRTH), Parivahan Sewa",
+    "source_url": "https://parivahan.gov.in",
+    "last_verified": "2026-10-17"
+  }
+]
